@@ -1,4 +1,5 @@
 using Catalog.Application.Mapper;
+using Catalog.Application.Query;
 using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data.Contexts;
 using Catalog.Infrastructure.Repositories;
@@ -13,10 +14,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GetProductByIdQuery))));
 
 builder.Services.AddScoped<ICatalogContext, CatalogContext>();
-builder.Services.AddScoped<IProductRepository, IProductRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IBrandRepository, ProductRepository>();
 builder.Services.AddScoped<ITypeRepository, ProductRepository>();
 
