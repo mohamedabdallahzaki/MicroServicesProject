@@ -15,14 +15,14 @@ namespace Catalog.Core.Repositories
 
         Task<IEnumerable<Product>> GetAllProductsByName(string name);
 
-        Task<IEnumerable<Product>> GetAllProductsByBrabdName(string name);
+        Task<IEnumerable<Product>> GetAllProductsByBrandName(string name);
 
-        Task<Product> CreateProsuct(Product product);
+        Task<Product> CreateProduct(Product product);
 
 
         Task<bool> UpdateProduct(Product product);
 
-        Task<bool> DeleteProduct(Product product);
+        Task<bool> DeleteProduct(string id);
 
 
 
