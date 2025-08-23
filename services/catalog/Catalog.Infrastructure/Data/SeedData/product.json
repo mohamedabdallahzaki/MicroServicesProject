@@ -5,7 +5,7 @@
     "Description": "Apple flagship smartphone with titanium frame",
     "Summary": "Latest iPhone model with A17 Pro chip",
     "ImageFile": "iphone15promax.png",
-    "Price": { "$numberDecimal": "1299.99" },
+    "Price": "1299.99" ,
     "Brand": {
       "Id": "64f8c9d5a1234567890abc01",
       "Name": "Apple"
@@ -21,7 +21,7 @@
     "Description": "Samsung flagship phone with 200MP camera",
     "Summary": "Latest Galaxy model with Snapdragon 8 Gen 3",
     "ImageFile": "galaxys24ultra.png",
-    "Price": { "$numberDecimal": "1199.99" },
+    "Price":  "1199.99" ,
     "Brand": {
       "Id": "64f8c9d5a1234567890abc03",
       "Name": "Samsung"
@@ -37,7 +37,7 @@
     "Description": "Apple laptop with M3 Max chip",
     "Summary": "High performance laptop for professionals",
     "ImageFile": "macbookpro16.png",
-    "Price": { "$numberDecimal": "3499.99" },
+    "Price":  "3499.99",
     "Brand": {
       "Id": "64f8c9d5a1234567890abc01",
       "Name": "Apple"
@@ -53,7 +53,7 @@
     "Description": "Sony wireless noise cancelling headphones",
     "Summary": "Premium over-ear headphones with LDAC support",
     "ImageFile": "sonywh1000xm5.png",
-    "Price": { "$numberDecimal": "399.99" },
+    "Price":  "399.99" ,
     "Brand": {
       "Id": "64f8c9d5a1234567890abc05",
       "Name": "Sony"
@@ -69,7 +69,7 @@
     "Description": "Dell premium ultrabook laptop",
     "Summary": "Powerful laptop with OLED display",
     "ImageFile": "dellxps15.png",
-    "Price": { "$numberDecimal": "2199.99" },
+    "Price": "2199.99" ,
     "Brand": {
       "Id": "64f8c9d5a1234567890abc07",
       "Name": "Dell"
