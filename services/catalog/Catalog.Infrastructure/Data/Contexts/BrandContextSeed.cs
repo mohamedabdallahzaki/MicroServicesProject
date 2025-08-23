@@ -17,7 +17,9 @@ namespace Catalog.Infrastructure.Data.Contexts
 
             if (hasData) return;
 
-           using  var brand = File.OpenRead(@"..\Catalog.Infrastructure\Data\SeedData\brand.json");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "SeedData", "brand.json");
+            using var brand = File.OpenRead(path);
+
 
             var brandData = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(brand);
 

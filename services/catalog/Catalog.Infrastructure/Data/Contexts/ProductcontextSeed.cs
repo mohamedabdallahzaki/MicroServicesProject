@@ -17,9 +17,10 @@ namespace Catalog.Infrastructure.Data.Contexts
 
             if (hasData) return;
 
-           using var productFile = File.OpenRead(@"..\Catalog.Infrastructure\Data\SeedData\product.json");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "SeedData", "product.json");
+            using var product = File.OpenRead(path);
 
-            var productData = await JsonSerializer.DeserializeAsync<List<Product>>(productFile);
+            var productData = await JsonSerializer.DeserializeAsync<List<Product>>(product);
 
             if (productData?.Any() is true)
 

@@ -2,6 +2,7 @@
 using Catalog.Application.Commond;
 using Catalog.Application.Responses;
 using Catalog.Core.Entities;
+using Catalog.Core.Specs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ namespace Catalog.Application.Mapper
             CreateMap<Product, ProductResponseDTO>().ReverseMap();
             CreateMap<ProductType, TypeResponseDTO>().ReverseMap();
             CreateMap<CreateProductCommond, Product>().ReverseMap();
+   
+            CreateMap<Pagantion<Product>, Pagantion<ProductResponseDTO>>().ReverseMap();
+
         }
     }
 }

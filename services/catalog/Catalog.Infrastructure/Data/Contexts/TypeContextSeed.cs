@@ -17,7 +17,9 @@ namespace Catalog.Infrastructure.Data.Contexts
 
             if (hasData) return;
 
-           using var type = File.OpenRead(@"..\Catalog.Infrastructure\Data\SeedData\type.json");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "SeedData", "type.json");
+            using var type = File.OpenRead(path);
+
 
             var typeData = await JsonSerializer.DeserializeAsync<List<ProductType>>(type);
 

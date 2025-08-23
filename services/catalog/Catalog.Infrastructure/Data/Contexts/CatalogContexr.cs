@@ -20,18 +20,23 @@ namespace Catalog.Infrastructure.Data.Contexts
 
         public CatalogContext(IConfiguration configuration)
         {
-            var client = new MongoClient(configuration["DatabaseSetteings:ConnectionString"]);
+            var client = new MongoClient(configuration["DatabaseSettings:ConnectionString"]);
 
-            var Db = client.GetDatabase(configuration["DatabaseSetteings:DatabaseName"]);
+            var Db = client.GetDatabase(configuration["DatabaseSettings:DatabaseName"]);
+             
 
-          Types   = Db.GetCollection<ProductType>("DatabaseSetteings:TypesCollection");
-          Brands = Db.GetCollection<ProductBrand>("DatabaseSetteings:BrandsCollection");
-          Products   = Db.GetCollection<Product>("DatabaseSetteings:ProductsCollection");
+
+            Types = Db.GetCollection<ProductType>(configuration["DatabaseSettings:TypesCollection"]);
+            Brands = Db.GetCollection<ProductBrand>(configuration["DatabaseSettings:BrandsCollection"]);
+            Products = Db.GetCollection<Product>(configuration["DatabaseSettings:ProductsCollection"]);
 
             _= ProductcontextSeed.SeedDataAsync(Products);
             _= BrandContextSeed.SeedDataAsync(Brands);
-            _ = TypeContextSeed.SeedDataAsync(Types);
+            _= TypeContextSeed.SeedDataAsync(Types);
+
+
 
         }
+
     }
 }

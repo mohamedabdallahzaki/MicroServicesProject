@@ -1,6 +1,8 @@
 ﻿using Catalog.Application.Commond;
+using Catalog.Application.Handler.Query;
 using Catalog.Application.Query;
 using Catalog.Application.Responses;
+using Catalog.Core.Specs;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,11 +49,11 @@ namespace Catalog.API.Controllers
 
         [HttpGet]
         [Route("GetAllProduct")]
-        [ProducesResponseType(typeof(IList<ProductResponseDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Pagantion<ProductResponseDTO>), (int)HttpStatusCode.OK)]
 
-        public async Task<ActionResult<IList<ProductResponseDTO>>> GetAllProduct()
+        public async Task<ActionResult<Pagantion<ProductResponseDTO>>> GetAllProduct([FromQuery] CatalogSpecParams spec)
         {
-            var query = new GetAllProductQuery();
+            var query = new GetAllProductQuery(spec);
 
             var res = await _mediator.Send(query);
 
@@ -92,6 +94,29 @@ namespace Catalog.API.Controllers
             return Ok(res);
         }
 
+        [HttpGet]
+        [Route("GetAllTyps")]
+        [ProducesResponseType(typeof(IList<TypeResponseDTO>), (int)HttpStatusCode.OK)]
 
+        public async Task<ActionResult<IList<TypeResponseDTO>>> GetAllTypes()
+        {
+            var query = new GetAllTypesQuery();
+            var res = await _mediator.Send(query);
+
+            return Ok(res);
+
+        }
+        [HttpGet]
+        [Route("GetAllBrands")]
+        [ProducesResponseType(typeof(IList<ProductBrandDTO>), (int)HttpStatusCode.OK)]
+
+        public async Task<ActionResult<IList<ProductBrandDTO>>> GetAllBrands()
+        {
+            var query = new GetAllBrandsQuery();
+            var res = await _mediator.Send(query);
+
+            return Ok(res);
+
+        }
     }
 }

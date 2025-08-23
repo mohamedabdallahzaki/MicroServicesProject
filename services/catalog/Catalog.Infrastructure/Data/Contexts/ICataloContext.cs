@@ -15,5 +15,7 @@ namespace Catalog.Infrastructure.Data.Contexts
         IMongoCollection<ProductBrand> Brands { get; }
 
         IMongoCollection<ProductType> Types { get; }
+
+       
     }
 }
