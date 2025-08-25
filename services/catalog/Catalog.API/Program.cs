@@ -44,6 +44,7 @@ builder.Services.AddSwaggerGen(options => {
         }
     });
 });
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

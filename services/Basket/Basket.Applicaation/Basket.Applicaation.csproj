@@ -11,11 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commonds\" />
-    <Folder Include="Handler\Commonds\" />
-    <Folder Include="Handler\Queries\" />
     <Folder Include="Mapper\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>
