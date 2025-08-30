@@ -11,19 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mapper\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="13.0.0" />
   </ItemGroup>
-	<ItemGroup>
-		<Protobuf
-			Include="..\..\..\services\Discount\Discount.Application\Protos\discount.proto"
-			Link="Protos\discount.proto"
-			GrpcServices="Client"
-			/>
-	</ItemGroup>
+
 
 </Project>
