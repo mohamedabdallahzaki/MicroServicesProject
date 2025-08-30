@@ -31,7 +31,37 @@ services:
      ports:
       - "6379:6379"
      restart: always
+   
+  discountdb:
+      image: postgres
+      container_name: discountdb
+      environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=Password@1
+        - POSTGRES_DB=DiscountDb
+      restart: always
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      healthcheck:
+         test: ["CMD-SHELL","pg_isready -U admin -d DiscountDb"]
+         interval: 10s
+         timeout: 5s
+         retries: 5
+  pagadmin:
+      image: dpage/pgadmin4
+      container_name: pgadmin
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=admin@ecommerce.com
+        - PGADMIN_DEFAULT_PASSWORD=Password@1
+      restart: always
+      ports:
+        - "5050:80"
+      volumes:
+        - pgadmin_data:/root/pgadmin
      
+
   
   basket.api:
     image: ${DOCKER_REGISTRY-}basketapi
@@ -39,7 +69,7 @@ services:
       context: .
       dockerfile: services/Basket/Basket.APi/Dockerfile
     ports:
-      - "8001:8000"
+      - "8010:8000"
     depends_on:
       - basketdb
     environment:
@@ -55,8 +85,26 @@ services:
     volumes:
       - portainer_data:/data
 
+  discount.api:
+    image: ${DOCKER_REGISTRY-}discountapi
+    build:
+      context: .
+      dockerfile: services/Discount/Discount.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings_ConnectionString=server=discountdb;Database=DiscountDb;port=5432;User Id = admin;Password=Password@1
+    container_name: discount.api
+    depends_on:
+       discountdb:
+          condition: service_healthy
+    ports:
+      - "8002:8000"
+
 volumes:
   catalogdata:
   portainer_data:
+  postgres_data:
+  pgadmin_data:
+
 
 
