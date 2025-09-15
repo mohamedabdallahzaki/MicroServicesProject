@@ -28,6 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 await  app.MigrateDatabase();
+app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapGrpcService<DiscountServices>();

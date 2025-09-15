@@ -1,8 +1,10 @@
 using Asp.Versioning;
 using Basket.Applicaation.Commonds;
+using Basket.Applicaation.GrpcServices;
 using Basket.Applicaation.Mapping;
 using Basket.Core.Repositories;
 using Basket.Infrastructure.Repositories;
+using Discount.Grpc.Proto3;
 using Microsoft.AspNetCore.Builder;
 using System.Reflection;
 
@@ -21,7 +23,12 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     ));
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.AddScoped<DiscountGrpcService>();
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(cfg =>
 
+  cfg.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"])
+
+);
 builder.Services.AddApiVersioning(options =>
 {
     options.ReportApiVersions = true;

@@ -20,8 +20,8 @@ namespace Catalog.Core.Entities
         [BsonRepresentation(MongoDB.Bson.BsonType.Decimal128)]
         public decimal Price { get; set; }
 
-        public ProductBrand Brand { get; set; }
+        public ProductBrand Brand { get; set; } = new ProductBrand();
 
-        public ProductType Type { get; set; }
+        public ProductType Type { get; set; } = new ProductType();
     }
 }

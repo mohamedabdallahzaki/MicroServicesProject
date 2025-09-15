@@ -20,19 +20,19 @@ namespace Discount.Infrastructure.Extension
             {
                 var services = scope.ServiceProvider;
                 var confg = services.GetRequiredService<IConfiguration>();
-                var Logger = services.GetRequiredService<ILogger>();
+                //var Logger = services.GetRequiredService<ILogger>();
 
                 try
                 {
-                    Logger.LogInformation("Discount Db migration stary");
+                    //Logger.LogInformation("Discount Db migration stary");
                     await ApplyMigrations(confg);
-                    Logger.LogInformation("discount Db migration completed");
+                    //Logger.LogInformation("discount Db migration completed");
 
                 }
                 catch(Exception ex) 
 
                 {
-                    Logger.LogInformation(ex,"cann't create database migration ");
+                    //Logger.LogInformation(ex,"cann't create database migration ");
                     throw;
                 }
                 return host;

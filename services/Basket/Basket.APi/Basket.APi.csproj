@@ -20,5 +20,6 @@
     <ProjectReference Include="..\Basket.Applicaation\Basket.Applicaation.csproj" />
     <ProjectReference Include="..\Basket.Infrastructure\Basket.Infrastructure.csproj" />
   </ItemGroup>
+	
 
 </Project>

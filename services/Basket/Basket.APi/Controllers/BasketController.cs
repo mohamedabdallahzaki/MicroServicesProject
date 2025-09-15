@@ -36,7 +36,8 @@ namespace Basket.APi.Controllers
         [ProducesResponseType(typeof(ShoppingCartRespones), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ShoppingCartRespones>> UpdateBasket([FromBody] CreateBasketCommond basketCommond)
         {
-            var basket = await _mediator.Send<ShoppingCartRespones>(basketCommond);
+        
+            var basket = await _mediator.Send(basketCommond);
 
             return Ok(basket);
         }
