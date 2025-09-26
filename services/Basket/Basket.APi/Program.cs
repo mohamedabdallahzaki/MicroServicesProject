@@ -46,9 +46,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is API for basket microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Abanoub Nabil",
-            Email = "abanoub.nabil2016@gmail.com",
-            Url = new Uri("https://yourwebsite.eg")
+            Name = "Mohamed Abdallah",
+            Email = "mohamedabdallh1542001@.com",
+            Url = new Uri("https://github.com/mohamedabdallahzaki")
         }
     });
 });
