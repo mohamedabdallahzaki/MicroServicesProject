@@ -1,12 +1,13 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Basket.APi.Controllers
+namespace Basket.API.Controllers
 {
     [ApiVersion("1")]
-    [Route("api/v{versio:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class BaseApiController:ControllerBase
+    public class BaseApiController : ControllerBase
     {
     }
 }

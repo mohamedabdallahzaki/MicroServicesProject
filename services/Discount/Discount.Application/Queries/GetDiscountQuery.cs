@@ -1,4 +1,4 @@
-﻿using Discount.Grpc.Proto3;
+﻿using Discount.Grpc.Protos;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Discount.Application.Queries
     {
         public string ProductName { get; set; }
 
-        public GetDiscountQuery( string productName)
+        public GetDiscountQuery(string productName)
         {
             ProductName = productName;
         }

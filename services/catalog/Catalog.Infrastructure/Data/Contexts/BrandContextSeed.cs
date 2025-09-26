@@ -9,25 +9,28 @@ using System.Threading.Tasks;
 
 namespace Catalog.Infrastructure.Data.Contexts
 {
-    public static  class BrandContextSeed
+    public static class BrandContextSeed
     {
-        public static async Task SeedDataAsync(IMongoCollection<ProductBrand> collection)
+        public static async Task SeedDataAsync(IMongoCollection<ProductBrand> brandCollection)
         {
-            var hasData = await collection.Find(_ => true).AnyAsync();
+            var hasBrands = await brandCollection.Find(_ => true).AnyAsync();
+            if (hasBrands)
+                return;
 
-            if (hasData) return;
+            var filePath = Path.Combine("Data", "SeedData", "brands.json");
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", "SeedData", "brand.json");
-            using var brand = File.OpenRead(path);
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Seed file not exists:{filePath}");
+                return;
+            }
+            var brandData = await File.ReadAllTextAsync(filePath);
+            var brands=JsonSerializer.Deserialize<List<ProductBrand>>(brandData);
 
-
-            var brandData = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(brand);
-
-            if(brandData?.Any() is true)
-
-                    await collection.InsertManyAsync(brandData);
-
+            if (brands?.Any() is true)
+            {
+              await brandCollection.InsertManyAsync(brands);
+            }
         }
-
     }
 }

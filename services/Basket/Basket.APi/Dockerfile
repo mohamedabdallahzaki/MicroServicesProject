@@ -4,29 +4,32 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8010
+EXPOSE 8080
+EXPOSE 443
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["services/Basket/Basket.APi/Basket.APi.csproj", "services/Basket/Basket.APi/"]
-COPY ["services/Basket/Basket.Applicaation/Basket.Applicaation.csproj", "services/Basket/Basket.Applicaation/"]
+COPY ["services/Basket/Basket.API/Basket.API.csproj", "services/Basket/Basket.API/"]
+COPY ["services/Basket/Basket.API/Basket.API.csproj", "services/Basket/Basket.API/"]
+COPY ["services/Basket/Basket.Application/Basket.Application.csproj", "services/Basket/Basket.Application/"]
 COPY ["services/Basket/Basket.Core/Basket.Core.csproj", "services/Basket/Basket.Core/"]
 COPY ["services/Basket/Basket.Infrastructure/Basket.Infrastructure.csproj", "services/Basket/Basket.Infrastructure/"]
-RUN dotnet restore "./services/Basket/Basket.APi/Basket.APi.csproj"
+COPY ["Infrastructure/EventBus.Messages/EventBus.Messages.csproj","Infrastructure/EventBus.Messages/"]
+RUN dotnet restore "./services/Basket/Basket.API/Basket.API.csproj"
 COPY . .
-WORKDIR "/src/services/Basket/Basket.APi"
-RUN dotnet build "./Basket.APi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/services/Basket/Basket.API"
+RUN dotnet build "./Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Basket.APi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Basket.APi.dll"]
+ENTRYPOINT ["dotnet", "Basket.API.dll"]

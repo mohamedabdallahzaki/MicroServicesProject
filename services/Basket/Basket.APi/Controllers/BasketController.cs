@@ -1,58 +1,88 @@
-﻿using Basket.Applicaation.Commonds;
-using Basket.Applicaation.Queries;
-using Basket.Applicaation.Responses;
+﻿using AutoMapper;
+using Basket.Application.Commands;
+using Basket.Application.GrpcServices;
+using Basket.Application.Queries;
+using Basket.Application.Responses;
+using Basket.Core.Entites;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Basket.APi.Controllers
+namespace Basket.API.Controllers
 {
- 
+
     public class BasketController : BaseApiController
     {
         private readonly IMediator _mediator;
+    
+        private readonly IMapper _mapper;
+        
 
-        public BasketController(IMediator mediator)
+        public BasketController(
+            IMediator mediator,
+            IMapper mapper)
         {
             _mediator = mediator;
+         
+            _mapper = mapper;
+           
         }
+
         [HttpGet]
-        [Route("[action]/{UserName}",Name ="GetBasketByUserName")]
-        [ProducesResponseType(typeof(ShoppingCartRespones) , (int) HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCartRespones>> GetBasket(string UserName)
+        [Route("[action]/{userName}" , Name ="GetBasketByUserName")]
+        [ProducesResponseType(typeof(ShoppingCartItemResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ShoppingCartResponse>> GetBasket(string userName)
         {
-
-            var query = new GetBasketByUserNameQuery(UserName);
+           var query = new GetBasketByUserNameQuery(userName);
             var basket = await _mediator.Send(query);
-
             return Ok(basket);
-
 
         }
 
-        [HttpPost]
-        [Route("UpdataBasket")]
-        [ProducesResponseType(typeof(ShoppingCartRespones), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCartRespones>> UpdateBasket([FromBody] CreateBasketCommond basketCommond)
+        [HttpPost("CreateBasket")]
+        [ProducesResponseType(typeof(ShoppingCartItemResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ShoppingCartResponse>> UpdateBasket([FromBody] CreateShoppingCartCommand command)
         {
-        
-            var basket = await _mediator.Send(basketCommond);
-
-            return Ok(basket);
+         
+          var basket = await _mediator.Send(command);
+          return Ok(basket);
         }
+
 
         [HttpDelete]
-        [Route("{UserName}", Name ="Deletebasket")]
+        [Route("[action]/{userName}", Name = "DeleteBasketByUserName")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Unit>> Deletebasket (string UserName)
+        public async Task<ActionResult<ShoppingCartResponse>> DeleteBasket(string userName)
         {
-            var commond = new DeleteBasketCommond(UserName);
+            var command = new DeleteBasketByUserNameCommand(userName);
+            return Ok(await _mediator.Send(command));
 
-            var res = await _mediator.Send(commond);
-
-            return Ok(res);
-            
         }
+
+        //[Route("[action]")]
+        //[HttpPost]
+        //[ProducesResponseType((int)HttpStatusCode.Accepted)]
+        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        //public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        //{
+        //    //get basket by user name
+        //    var query = new GetBasketByUserNameQuery(basketCheckout.UserName);
+        //    var basket = await _mediator.Send(query);
+
+        //    if (basket == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+            
+        //    //remove from basket
+        //    var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
+        //    await _mediator.Send(deletedcmd);
+        //    return Accepted();
+        //}
+
+
     }
 }

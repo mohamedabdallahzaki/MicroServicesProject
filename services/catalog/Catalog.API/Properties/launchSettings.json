@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Ctalog.Api": {
+    "Catalog.API": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

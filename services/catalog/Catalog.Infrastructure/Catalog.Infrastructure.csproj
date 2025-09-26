@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\SeedData\brand.json">
+    <None Update="Data\SeedData\brands.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\SeedData\product.json">
+    <None Update="Data\SeedData\products.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\SeedData\type.json">
+    <None Update="Data\SeedData\types.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
