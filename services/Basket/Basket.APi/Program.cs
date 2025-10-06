@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -26,8 +27,6 @@ builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<DiscountGrpcService>();
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
     cfg => cfg.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]));
-
-
 
 
 
@@ -46,9 +45,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is API for basket microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Mohamed Abdallah",
-            Email = "mohamedabdallh1542001@.com",
-            Url = new Uri("https://github.com/mohamedabdallahzaki")
+            Name = "Abanoub Nabil",
+            Email = "abanoub.nabil2016@gmail.com",
+            Url = new Uri("https://yourwebsite.eg")
         }
     });
 });

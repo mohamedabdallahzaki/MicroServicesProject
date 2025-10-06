@@ -8,6 +8,9 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+;
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -39,9 +42,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is API for Catalog microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Mohamed Abdallah",
-            Email = "mohamedabdallh1542001@.com",
-            Url = new Uri("https://github.com/mohamedabdallahzaki")
+            Name = "Abanoub Nabil",
+            Email = "abanoub.nabil2016@gmail.com",
+            Url = new Uri("https://yourwebsite.eg")
         }
     });
 });

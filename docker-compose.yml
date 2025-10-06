@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: services/catalog/Catalog.API/Dockerfile
     ports:
-      - "8000:8000" 
+      - "8000:8000" # ربط البورت من الجهاز للمشروع
     depends_on:
       - catalogdb
     environment:
@@ -16,6 +16,7 @@ services:
       - DatabaseSettings__CollectionName=Products
       - DatabaseSettings__BrandsCollection=ProductBrands
       - DatabaseSettings__TypesCollection=ProductTypes
+    
 
   catalogdb:
     image: mongo
@@ -48,6 +49,24 @@ services:
       timeout: 5s
       retries: 5
 
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: orderdb
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "P@ssw0rd123"
+
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - orderdb-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'P@ssw0rd123' -Q 'select 1'"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
 
 
   basket.api:
@@ -56,7 +75,7 @@ services:
       context: .
       dockerfile: services/Basket/Basket.API/Dockerfile
     ports:
-      - "8001:8000"
+      - "8011:8000" # ربط البورت من الجهاز للمشروع
     depends_on:
       - basketdb
     environment:
@@ -64,7 +83,7 @@ services:
       - ASPNETCORE_URLS=http://+:8000
       - CacheSettings__ConnectionString=basketdb:6379
       - "GrpcSettings__DiscountUrl=http://discount.api:8080"
-
+    
      
  
   portainer:
@@ -90,8 +109,21 @@ services:
        discountdb:
          condition: service_healthy
     ports:
-      - "8002:8080"
+      - "8012:8080"
 
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: services/Ordering/Ordering.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - "ConnectionStrings__OrderingConnectionString=Server=orderdb;Database=OrderDb2;User Id=sa;Password=P@ssw0rd123;TrustServerCertificate=True;"
+    depends_on:
+      - orderdb
+    ports:
+     - "8013:8080"
   
 
 volumes:
@@ -99,6 +131,8 @@ volumes:
   portainer_data:
   postgres_data:
   pgadmin_data:
+  orderdb-data:
+
 
 
 

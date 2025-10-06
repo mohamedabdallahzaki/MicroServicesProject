@@ -4,6 +4,7 @@ using Basket.Application.GrpcServices;
 using Basket.Application.Queries;
 using Basket.Application.Responses;
 using Basket.Core.Entites;
+
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -16,17 +17,21 @@ namespace Basket.API.Controllers
     public class BasketController : BaseApiController
     {
         private readonly IMediator _mediator;
-    
+       
         private readonly IMapper _mapper;
+        private readonly ILogger<BasketController> _logger;
         
 
         public BasketController(
-            IMediator mediator,
-            IMapper mapper)
+            IMediator mediator, 
+            IMapper mapper,
+            ILogger<BasketController> logger
+
+            )
         {
-            _mediator = mediator;
-         
+            _mediator = mediator;     
             _mapper = mapper;
+            _logger = logger;
            
         }
 
@@ -61,27 +66,26 @@ namespace Basket.API.Controllers
 
         }
 
-        //[Route("[action]")]
-        //[HttpPost]
-        //[ProducesResponseType((int)HttpStatusCode.Accepted)]
-        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        //public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
-        //{
-        //    //get basket by user name
-        //    var query = new GetBasketByUserNameQuery(basketCheckout.UserName);
-        //    var basket = await _mediator.Send(query);
+        [Route("[action]")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            //get basket by user name
+            var query = new GetBasketByUserNameQuery(basketCheckout.UserName);
+            var basket = await _mediator.Send(query);
 
-        //    if (basket == null)
-        //    {
-        //        return BadRequest();
-        //    }
+            if (basket == null)
+            {
+                return BadRequest();
+            }
 
-            
-        //    //remove from basket
-        //    var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
-        //    await _mediator.Send(deletedcmd);
-        //    return Accepted();
-        //}
+            //remove from basket
+            var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
+            await _mediator.Send(deletedcmd);
+            return Accepted();
+        }
 
 
     }
