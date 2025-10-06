@@ -36,6 +36,22 @@ namespace Ordering.Application.Handlers.Commands
             {
                 throw new OrderNotFoundException(nameof(Order), request.Id);
             }
+            orderToUpdate.AddressLine = request.AddressLine;
+            orderToUpdate.UserName = request.UserName;
+            orderToUpdate.FirstName = request.FirstName;
+            orderToUpdate.LastName = request.LastName;
+            orderToUpdate.Cvv = request.Cvv;
+            orderToUpdate.CardName = request.CardName;
+            orderToUpdate.CardNumber = request.CardNumber;
+            orderToUpdate.Country = request.Country;
+            orderToUpdate.LastModifiedDate = DateTime.UtcNow;
+            orderToUpdate.EmailAddress = request.EmailAddress;
+            orderToUpdate.Expiration = request.Expiration;
+            orderToUpdate.PaymentMethod = request.PaymentMethod;
+            orderToUpdate.ZipCode = request.ZipCode;
+            orderToUpdate.TotalPrice = request.TotalPrice;
+            orderToUpdate.State = request.State;
+           
             await _orderRepository.UpdateAsync(orderToUpdate);
             _logger.LogInformation($"Order with id {orderToUpdate.Id} was updated successfully");
             return Unit.Value;

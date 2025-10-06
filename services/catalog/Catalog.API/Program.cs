@@ -37,14 +37,14 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "Catalog API",
+        Title = "Basket API",
         Version = "v1",
         Description = "This is API for Catalog microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Abanoub Nabil",
-            Email = "abanoub.nabil2016@gmail.com",
-            Url = new Uri("https://yourwebsite.eg")
+            Name = "Mohamee Abdallah",
+            Email = "Mohamee.Abdallah@gmail.com",
+            Url = new Uri("https://Mywebsite.eg")
         }
     });
 });
