@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 8080
 
 
 # This stage is used to build the service project
@@ -15,8 +15,6 @@ COPY ["services/catalog/Catalog.API/Catalog.API.csproj", "services/catalog/Catal
 COPY ["services/catalog/Catalog.Application/Catalog.Application.csproj", "services/catalog/Catalog.Application/"]
 COPY ["services/catalog/Catalog.Core/Catalog.Core.csproj", "services/catalog/Catalog.Core/"]
 COPY ["services/catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj", "services/catalog/Catalog.Infrastructure/"]
-COPY services/catalog/Catalog.Infrastructure/Data/SeedData /src/services/catalog/Catalog.Infrastructure/Data/SeedData
-COPY ["Infrastructure/Common.Logging/Common.Logging.csproj","Infrastructure/Common.Logging/"]
 RUN dotnet restore "./services/catalog/Catalog.API/Catalog.API.csproj"
 COPY . .
 WORKDIR "/src/services/catalog/Catalog.API"

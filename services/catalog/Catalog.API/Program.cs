@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
+    app.UseDeveloperExceptionPage();
     app.UseSwaggerUI();
 }
 

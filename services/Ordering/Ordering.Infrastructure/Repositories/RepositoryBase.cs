@@ -43,7 +43,7 @@ namespace Ordering.Infrastructure.Repositories
         }
         public async Task UpdateAsync(T entity)
         {
-            _orderContext.Entry(entity).State = EntityState.Modified;
+            //_orderContext.Entry(entity).State = EntityState.Modified;
             _orderContext.Set<T>().Update(entity);
             await _orderContext.SaveChangesAsync();
         }

@@ -111,13 +111,13 @@ namespace Catalog.Infrastructure.Repositories
 
         private async Task<IReadOnlyList<Product>> DataFilter(CatalogSpecParams catalogSpecParams, FilterDefinition<Product> filter)
         {
-            var sortDefn = Builders<Product>.Sort.Ascending("Name");
+            var sortDefn = Builders<Product>.Sort.Ascending();
             if (!string.IsNullOrEmpty(catalogSpecParams.Sort))
             {
                 switch (catalogSpecParams.Sort)
                 {
                     case "priceAsc":
-
+                         
                         sortDefn = Builders<Product>.Sort.Ascending(p => p.Price);
                         break;
                     case "priceDesc":

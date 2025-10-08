@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ordering.Core.Entities;
 
 
@@ -8,6 +9,12 @@ namespace Ordering.Infrastructure.Data
     {
         public static async Task SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
         {
+            var migratedb = await orderContext.Database.GetPendingMigrationsAsync();
+            if(migratedb != null)
+            {
+                await orderContext.Database.MigrateAsync();
+            }
+
             if (!orderContext.Orders.Any())
             {
                 orderContext.Orders.AddRange(GetOrders());

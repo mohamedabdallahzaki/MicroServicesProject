@@ -56,6 +56,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetValue<string>("CacheSettings:ConnectionString");
+    
 });
 
 

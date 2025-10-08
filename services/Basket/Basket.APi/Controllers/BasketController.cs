@@ -70,7 +70,7 @@ namespace Basket.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        public async Task<ActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
         {
             //get basket by user name
             var query = new GetBasketByUserNameQuery(basketCheckout.UserName);
@@ -83,7 +83,7 @@ namespace Basket.API.Controllers
 
             //remove from basket
             var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
-            await _mediator.Send(deletedcmd);
+           await _mediator.Send(deletedcmd);
             return Accepted();
         }
 
