@@ -117,7 +117,7 @@ namespace Catalog.Infrastructure.Repositories
                 switch (catalogSpecParams.Sort)
                 {
                     case "priceAsc":
-                         
+
                         sortDefn = Builders<Product>.Sort.Ascending(p => p.Price);
                         break;
                     case "priceDesc":

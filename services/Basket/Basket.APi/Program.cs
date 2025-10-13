@@ -3,15 +3,17 @@ using Basket.Application.GrpcServices;
 using Basket.Application.Mappers;
 using Basket.Core.Repositories;
 using Basket.Infrastructure.Repositories;
+using Common.Logging;
 using Discount.Grpc.Protos;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -32,12 +34,12 @@ builder.Services.AddMassTransit(config =>
 {
     config.UsingRabbitMq((ct, cfg) =>
     {
+
         cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
     });
 });
 
 builder.Services.AddMassTransitHostedService();
-
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -54,9 +56,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is API for basket microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Mohamee Abdallah",
-            Email = "Mohamee.Abdallah@gmail.com",
-            Url = new Uri("https://Mywebsite.eg")
+            Name = "Abanoub Nabil",
+            Email = "abanoub.nabil2016@gmail.com",
+            Url = new Uri("https://yourwebsite.eg")
         }
     });
 });
@@ -65,7 +67,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetValue<string>("CacheSettings:ConnectionString");
-    
 });
 
 

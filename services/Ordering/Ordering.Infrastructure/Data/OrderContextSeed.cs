@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Ordering.Core.Entities;
 
 
@@ -9,12 +8,6 @@ namespace Ordering.Infrastructure.Data
     {
         public static async Task SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
         {
-            var migratedb = await orderContext.Database.GetPendingMigrationsAsync();
-            if(migratedb != null)
-            {
-                await orderContext.Database.MigrateAsync();
-            }
-
             if (!orderContext.Orders.Any())
             {
                 orderContext.Orders.AddRange(GetOrders());
@@ -28,10 +21,10 @@ namespace Ordering.Infrastructure.Data
             return new List<Order> {
                 new()
                 {
-                    UserName="Mo",
-                    FirstName="Mohamed",
-                    LastName="Abdallah",
-                    EmailAddress="Mohamed@eCommerce.net",
+                    UserName="AbanoubNabil",
+                    FirstName="Abanoub",
+                    LastName="Nabil",
+                    EmailAddress="abnabil@eCommerce.net",
                     AddressLine="Cairo",
                     Country="Egypt",
                     TotalPrice=750,
@@ -40,11 +33,11 @@ namespace Ordering.Infrastructure.Data
 
                     CardName="Visa",
                     CardNumber="1234567890123456",
-                    CreatedBy="Mohamed",
+                    CreatedBy="Abanoub",
                     Expiration="12/26",
                     Cvv="123",
                     PaymentMethod=1,
-                    LastModifiedBy="Mohamee",
+                    LastModifiedBy="Abanoub",
                     LastModifiedDate=new DateTime()
                 }
             };

@@ -17,23 +17,24 @@ namespace Basket.API.Controllers
     public class BasketController : BaseApiController
     {
         private readonly IMediator _mediator;
-        private readonly IPublishEndpoint _publish;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMapper _mapper;
         private readonly ILogger<BasketController> _logger;
         
 
         public BasketController(
             IMediator mediator, 
+            IPublishEndpoint publishEndpoint, 
             IMapper mapper,
-            ILogger<BasketController> logger,
-            IPublishEndpoint publish
+            ILogger<BasketController> logger
 
             )
         {
-            _mediator = mediator;     
+            _mediator = mediator;
+            _publishEndpoint = publishEndpoint;
             _mapper = mapper;
             _logger = logger;
-            _publish = publish;
+           
         }
 
         [HttpGet]
@@ -71,33 +72,28 @@ namespace Basket.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        
-        public async Task<ActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
         {
+            //get basket by user name
             var query = new GetBasketByUserNameQuery(basketCheckout.UserName);
-
             var basket = await _mediator.Send(query);
 
-            if(basket == null)
+            if (basket == null)
             {
                 return BadRequest();
             }
 
-            var enevtMsg = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
-            enevtMsg.TotalPrice = basket.TotalPrice;
-            await _publish.Publish(enevtMsg);
-            // after send msg delete basket from basket db 
-            var deletedBasket = new DeleteBasketByUserNameCommand(enevtMsg.UserName!);
+            var eventMsg = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            eventMsg.TotalPrice= basket.TotalPrice;
+            await _publishEndpoint.Publish(eventMsg);
 
-            await _mediator.Send(deletedBasket);
-
-
-
+            _logger.LogInformation($"Basket Published for {basket.UserName}");
+            //remove from basket
+            var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
+            await _mediator.Send(deletedcmd);
             return Accepted();
-
-
         }
- 
+
 
     }
 }

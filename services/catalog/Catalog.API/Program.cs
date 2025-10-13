@@ -3,13 +3,15 @@ using Catalog.Application.Queries;
 using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data.Contexts;
 using Catalog.Infrastructure.Repositories;
+using Common.Logging;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-;
+builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
@@ -37,14 +39,14 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "Basket API",
+        Title = "Catalog API",
         Version = "v1",
         Description = "This is API for Catalog microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Mohamee Abdallah",
-            Email = "Mohamee.Abdallah@gmail.com",
-            Url = new Uri("https://Mywebsite.eg")
+            Name = "Abanoub Nabil",
+            Email = "abanoub.nabil2016@gmail.com",
+            Url = new Uri("https://yourwebsite.eg")
         }
     });
 });
@@ -57,7 +59,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
-    app.UseDeveloperExceptionPage();
     app.UseSwaggerUI();
 }
 

@@ -1,3 +1,4 @@
+using Common.Logging;
 using EventBus.Messages.Common;
 using MassTransit;
 using Ordering.API.EventBusConsumer;
@@ -5,12 +6,12 @@ using Ordering.API.Extensions;
 using Ordering.Application.Extensions;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Extensions;
-
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 
 
@@ -20,35 +21,19 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
 });
-builder.Services.AddScoped<OrderingBasketConsumer>();
-builder.Services.AddMassTransit(confg =>
-{
-    confg.AddConsumer<OrderingBasketConsumer>();
-
-    confg.UsingRabbitMq((ct, cfg) =>
-    {
-        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
-        cfg.ReceiveEndpoint(EventBusConstant.BasketCheeckoutQueue, c =>
-        {
-            c.ConfigureConsumer<OrderingBasketConsumer>(ct);
-        });
-    });
-});
-
-builder.Services.AddMassTransitHostedService();
 
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "Basket API",
+        Title = "Catalog API",
         Version = "v1",
-        Description = "This is API for basket microservice in ecommerce application",
+        Description = "This is API for Catalog microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Mohamee Abdallah",
-            Email = "Mohamee.Abdallah@gmail.com",
-            Url = new Uri("https://Mywebsite.eg")
+            Name = "Abanoub Nabil",
+            Email = "abanoub.nabil2016@gmail.com",
+            Url = new Uri("https://yourwebsite.eg")
         }
     });
 });
@@ -56,8 +41,26 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddApplicationServices();
 
 builder.Services.AddInfraServices(builder.Configuration);
+builder.Services.AddScoped<BasketOrderingConsumer>();
+
+builder.Services.AddMassTransit(config =>
+{
+    //Mark this as consumer
+    config.AddConsumer<BasketOrderingConsumer>();
+    config.UsingRabbitMq((ct, cfg) =>
+    {
+
+        cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+        //provide the queue name with consumer
+        cfg.ReceiveEndpoint(EventBusConstant.BasketCheckoutQueue, c =>
+        {
+            c.ConfigureConsumer<BasketOrderingConsumer>(ct);
+        });
+    });
+});
 
 
+builder.Services.AddMassTransitHostedService();
 
 
 builder.Services.AddControllers();

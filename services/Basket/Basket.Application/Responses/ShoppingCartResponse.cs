@@ -27,7 +27,7 @@ namespace Basket.Application.Responses
             get
             {
                 decimal totalPrice = 0;
-                foreach (var item in Items)
+                foreach (ShoppingCartItem item in Items)
                 {
                     totalPrice += item.Price * item.Quantity;
                 }

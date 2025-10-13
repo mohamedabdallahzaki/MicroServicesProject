@@ -3,7 +3,6 @@ using Basket.Application.Responses;
 using Basket.Core.Entites;
 using EventBus.Messages.Events;
 
-
 namespace Basket.Application.Mappers
 {
     public class BasketMappingProfile :Profile
@@ -12,9 +11,7 @@ namespace Basket.Application.Mappers
         {
             CreateMap<ShoppingCart,ShoppingCartResponse>().ReverseMap();
             CreateMap<ShoppingCartItem,ShoppingCartItemResponse>().ReverseMap();
-            CreateMap<BasketCheckout, BasketCheckoutEvent>().ReverseMap();
-            CreateMap<ShoppingCartResponse, BasketCheckoutEvent>().ReverseMap();
-            
+            CreateMap<BasketCheckout,BasketCheckoutEvent>().ReverseMap();
         }
     }
 }
