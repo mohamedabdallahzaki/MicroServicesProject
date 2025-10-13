@@ -34,7 +34,7 @@ namespace Common.Logging
 
             }
 
-            //TODO :: Configure elastic search configurations
+           
 
             var elasticUrl = context.Configuration.GetValue<string>("ElasticConfiguration:Uri");
             if(!string.IsNullOrEmpty(elasticUrl)) 

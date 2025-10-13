@@ -31,9 +31,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "This is API for Catalog microservice in ecommerce application",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Abanoub Nabil",
-            Email = "abanoub.nabil2016@gmail.com",
-            Url = new Uri("https://yourwebsite.eg")
+            Name = "Mohamed Abdallah",
+            Email = "Mohamedabdallah1542001@gmail.com",
+            Url = new Uri("https://localhost:8000")
         }
     });
 });
@@ -45,13 +45,13 @@ builder.Services.AddScoped<BasketOrderingConsumer>();
 
 builder.Services.AddMassTransit(config =>
 {
-    //Mark this as consumer
+  
     config.AddConsumer<BasketOrderingConsumer>();
     config.UsingRabbitMq((ct, cfg) =>
     {
 
         cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
-        //provide the queue name with consumer
+        
         cfg.ReceiveEndpoint(EventBusConstant.BasketCheckoutQueue, c =>
         {
             c.ConfigureConsumer<BasketOrderingConsumer>(ct);
