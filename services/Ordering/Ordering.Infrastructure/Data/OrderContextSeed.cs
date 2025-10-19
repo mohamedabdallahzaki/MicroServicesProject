@@ -21,10 +21,10 @@ namespace Ordering.Infrastructure.Data
             return new List<Order> {
                 new()
                 {
-                    UserName="AbanoubNabil",
-                    FirstName="Abanoub",
-                    LastName="Nabil",
-                    EmailAddress="abnabil@eCommerce.net",
+                    UserName="Mohamed",
+                    FirstName="Mohamed",
+                    LastName="Abdallah",
+                    EmailAddress="Mohamed@eCommerce.net",
                     AddressLine="Cairo",
                     Country="Egypt",
                     TotalPrice=750,
@@ -33,11 +33,11 @@ namespace Ordering.Infrastructure.Data
 
                     CardName="Visa",
                     CardNumber="1234567890123456",
-                    CreatedBy="Abanoub",
+                    CreatedBy="Mohamed",
                     Expiration="12/26",
                     Cvv="123",
                     PaymentMethod=1,
-                    LastModifiedBy="Abanoub",
+                    LastModifiedBy="Moahamed",
                     LastModifiedDate=new DateTime()
                 }
             };

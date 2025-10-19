@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Basket.Application.Commands;
 using Basket.Application.GrpcServices;
 using Basket.Application.Mappers;
@@ -7,7 +8,9 @@ using Common.Logging;
 using Discount.Grpc.Protos;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,7 +49,12 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
+}).AddApiExplorer(options => {
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl= true;
 });
+
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -61,8 +69,34 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://localhost:8000")
         }
     });
-});
+    options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Basket API",
+        Version = "v2",
+        Description = "This is API for basket microservice v2 in ecommerce application",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "Mohamed Abdallah",
+            Email = "Mohamedabdallah1542001@gmail.com",
+            Url = new Uri("https://localhost:8000")
+        }
+    });
 
+    options.DocInclusionPredicate((version, apiDescription) =>
+    {
+        if (!apiDescription.TryGetMethodInfo(out var methodInfo))
+        {
+            return false;
+        }
+        var versions = methodInfo.DeclaringType?
+                       .GetCustomAttributes(true)
+                       .OfType<ApiVersionAttribute>()
+                       .SelectMany(a => a.Versions);
+
+        return versions?.Any(v => $"{v.ToString()}" == version) ?? false;
+
+    });
+});
 //redis
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -79,7 +113,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.APi v1");
+        c.SwaggerEndpoint("/swagger/v2/swagger.json", "Basket.APi v2");
+    });
 }
 
 app.UseAuthorization();
