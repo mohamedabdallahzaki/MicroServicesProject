@@ -11,6 +11,7 @@ namespace Catalog.Core.Entities
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+
         public string Id { get; set; }
     }
 }

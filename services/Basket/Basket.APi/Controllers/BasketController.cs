@@ -65,7 +65,8 @@ namespace Basket.API.Controllers
         public async Task<ActionResult<ShoppingCartResponse>> DeleteBasket(string userName)
         {
             var command = new DeleteBasketByUserNameCommand(userName);
-            return Ok(await _mediator.Send(command));
+            var res = await _mediator.Send(command);
+            return Ok(res);
 
         }
 
@@ -89,7 +90,7 @@ namespace Basket.API.Controllers
             await _publishEndpoint.Publish(eventMsg);
 
             _logger.LogInformation($"Basket Published for {basket.UserName}");
-            //remove from basket
+            
             var deletedcmd = new DeleteBasketByUserNameCommand(basketCheckout.UserName);
             await _mediator.Send(deletedcmd);
             return Accepted();

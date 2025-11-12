@@ -10,7 +10,7 @@ namespace Basket.Application.Responses
             get; set;
         }
 
-        public List<ShoppingCartItem> Items { get; set; } = new List<ShoppingCartItem>();
+        public List<ShoppingCartItemResponse> Items { get; set; } = new List<ShoppingCartItemResponse>();
 
         public ShoppingCartResponse()
         {
@@ -27,7 +27,7 @@ namespace Basket.Application.Responses
             get
             {
                 decimal totalPrice = 0;
-                foreach (ShoppingCartItem item in Items)
+                foreach (var item in Items)
                 {
                     totalPrice += item.Price * item.Quantity;
                 }

@@ -2,11 +2,7 @@
 using Basket.Core.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Basket.Infrastructure.Repositories
 {
@@ -35,7 +31,7 @@ namespace Basket.Infrastructure.Repositories
             var basket = await _redisCache.GetStringAsync(cart.UserName);
             if (basket != null)
             {
-                //logic return 
+             
                 return await GetBasket(cart.UserName);
             }
             else

@@ -7,8 +7,11 @@ using Basket.Infrastructure.Repositories;
 using Common.Logging;
 using Discount.Grpc.Protos;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
@@ -21,6 +24,47 @@ builder.Host.UseSerilog(Logging.ConfigureLogger);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+     .AddJwtBearer(options =>
+     {
+         options.Authority = "https://host.docker.internal:9009";
+         options.RequireHttpsMetadata = true;
+
+         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+         {
+             ValidateAudience = true,
+             ValidAudience = "Basket",
+             ValidateIssuer = true,
+             ValidIssuer = "https://localhost:9009",
+             ValidateLifetime = true,
+             ValidateIssuerSigningKey = true,
+             ClockSkew = TimeSpan.Zero
+
+         };
+         // for connect with doxker 
+
+         options.BackchannelHttpHandler = new HttpClientHandler
+         {
+             ServerCertificateCustomValidationCallback = (messge, cert, chain, errors) => true
+         };
+
+         options.Events = new JwtBearerEvents
+         {
+
+             OnAuthenticationFailed = context =>
+             {
+                 Console.WriteLine($"======= Authentication Error");
+                 Console.WriteLine($"{context.Exception.Message}");
+                 Console.WriteLine($"{options.Authority}");
+
+                 return Task.CompletedTask;
+             }
+
+         };
+
+     });
+
 
 builder.Services.AddAutoMapper(typeof(BasketMappingProfile).Assembly);
 
@@ -44,6 +88,15 @@ builder.Services.AddMassTransit(config =>
 
 builder.Services.AddMassTransitHostedService();
 
+var userPolicy = new AuthorizationPolicyBuilder()
+     .RequireAuthenticatedUser().Build();
+
+builder.Services.AddControllers(conf =>
+{
+    conf.Filters.Add(new AuthorizeFilter(userPolicy));
+});
+
+
 builder.Services.AddApiVersioning(options =>
 {
     options.ReportApiVersions = true;
@@ -55,6 +108,7 @@ builder.Services.AddApiVersioning(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -92,9 +146,11 @@ builder.Services.AddSwaggerGen(options =>
                        .GetCustomAttributes(true)
                        .OfType<ApiVersionAttribute>()
                        .SelectMany(a => a.Versions);
+           
 
-        return versions?.Any(v => $"{v.ToString()}" == version) ?? false;
+        return versions?.Any(v => $"v{v.ToString()}" == version) ?? false;
 
+    
     });
 });
 //redis
@@ -119,6 +175,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v2/swagger.json", "Basket.APi v2");
     });
 }
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

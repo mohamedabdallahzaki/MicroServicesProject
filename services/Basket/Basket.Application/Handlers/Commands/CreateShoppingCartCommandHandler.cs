@@ -2,6 +2,7 @@
 using Basket.Application.Commands;
 using Basket.Application.GrpcServices;
 using Basket.Application.Responses;
+using Basket.Core.Entites;
 using Basket.Core.Repositories;
 using MediatR;
 
@@ -32,12 +33,8 @@ namespace Basket.Application.Handlers.Commands
                     item.Price -= coupon.Amount;
                 }
             }
-            var shoppingCart = await _basketRepository.UpdateBasket(new Core.Entites.ShoppingCart()
-            {
-                UserName = request.UserName,
-                Items = request.Items,
-            });
-
+            var shoppingCartItem = _mapper.Map<ShoppingCart>(request);
+            var shoppingCart = await _basketRepository.UpdateBasket(shoppingCartItem);
             var shoppingCartResponse = _mapper.Map<ShoppingCartResponse>(shoppingCart);
 
             return shoppingCartResponse;

@@ -16,9 +16,9 @@ namespace Basket.Application.Commands
             get; set;
         }
 
-        public List<ShoppingCartItem> Items { get; set; }
+        public List<ShoppingCartItemResponse> Items { get; set; }
 
-        public CreateShoppingCartCommand(string userName, List<ShoppingCartItem> items)
+        public CreateShoppingCartCommand(string userName, List<ShoppingCartItemResponse> items)
         {
             UserName = userName;
             Items = items;

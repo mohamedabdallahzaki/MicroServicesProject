@@ -19,7 +19,8 @@ namespace Basket.Application.GrpcServices
         public async Task<CouponModel> GetDiscount(string productName)
         {
             var discountRequest = new GetDiscountRequest { ProductName = productName };
-            return await _disocuntGrpcClient.GetDiscountAsync(discountRequest);
+           var coupon = await _disocuntGrpcClient.GetDiscountAsync(discountRequest);
+            return coupon;
 
         }
     }

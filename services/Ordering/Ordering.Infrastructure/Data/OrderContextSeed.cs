@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ordering.Core.Entities;
 
 
@@ -8,6 +9,7 @@ namespace Ordering.Infrastructure.Data
     {
         public static async Task SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
         {
+            
             if (!orderContext.Orders.Any())
             {
                 orderContext.Orders.AddRange(GetOrders());

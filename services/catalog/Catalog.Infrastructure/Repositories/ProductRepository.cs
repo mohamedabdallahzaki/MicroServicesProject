@@ -13,10 +13,8 @@ namespace Catalog.Infrastructure.Repositories
 {
     public class ProductRepository : IProductRepository, IBrandRepository, ITypeRepository
     {
-        public ICatalogContext _context
-        {
-            get; set;
-        }
+        private readonly ICatalogContext _context;
+
 
         public ProductRepository(ICatalogContext context)
         {

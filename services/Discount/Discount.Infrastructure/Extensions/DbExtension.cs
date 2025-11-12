@@ -61,7 +61,6 @@ namespace Discount.Infrastructure.Extensions
 
                     cmd.CommandText = "INSERT INTO Coupon(ProductName, Description, Amount) VALUES('PowerFit 19 FH Rubber Spike Cricket Shoes', 'Racquet Discount', 700);";
                     cmd.ExecuteNonQuery();
-                    // Exit loop if successful
                     break;
                 }
                 catch (Exception ex)

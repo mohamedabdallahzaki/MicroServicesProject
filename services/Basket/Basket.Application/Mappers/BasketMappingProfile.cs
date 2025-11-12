@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Basket.Application.Commands;
 using Basket.Application.Responses;
 using Basket.Core.Entites;
 using EventBus.Messages.Events;
@@ -11,6 +12,7 @@ namespace Basket.Application.Mappers
         {
             CreateMap<ShoppingCart,ShoppingCartResponse>().ReverseMap();
             CreateMap<ShoppingCartItem,ShoppingCartItemResponse>().ReverseMap();
+            CreateMap<CreateShoppingCartCommand, ShoppingCart>().ReverseMap();
             CreateMap<BasketCheckout,BasketCheckoutEvent>().ReverseMap();
             CreateMap<BasketCheckoutEventV2, BasketCheckoutV2>().ReverseMap();
         }

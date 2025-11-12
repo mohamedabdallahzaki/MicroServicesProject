@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>f7a54b29-0bab-4015-b0d7-faea2ce0a5b0</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+
+		<PackageReference Include="Duende.IdentityServer" Version="7.0.4" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.3" />
+
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+	</ItemGroup>
+
+
+
+</Project>

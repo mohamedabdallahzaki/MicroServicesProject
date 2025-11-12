@@ -4,6 +4,9 @@ using Catalog.Core.Repositories;
 using Catalog.Infrastructure.Data.Contexts;
 using Catalog.Infrastructure.Repositories;
 using Common.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
 using System.Reflection;
 
@@ -15,9 +18,63 @@ builder.Host.UseSerilog(Logging.ConfigureLogger);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+     .AddJwtBearer(options =>
+     {
+         options.Authority = "https://host.docker.internal:9009";
+         options.RequireHttpsMetadata = true;
+
+         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+         {
+             ValidateAudience =  true,
+             ValidAudience = "Catalog",
+             ValidateIssuer = true,
+             ValidIssuer = "https://localhost:9009",
+             ValidateLifetime = true,
+             ValidateIssuerSigningKey = true,
+             ClockSkew = TimeSpan.Zero
+
+         };
+       
+
+        // to connect with docker 
+         options.BackchannelHttpHandler = new HttpClientHandler
+         {
+             ServerCertificateCustomValidationCallback = (messge, cert, chain, errors) => true
+         };
+
+         options.Events = new JwtBearerEvents
+         {
+
+             OnAuthenticationFailed = context =>
+             {
+                 Console.WriteLine($" Authentication Error");
+                 Console.WriteLine($"{context.Exception.Message}");
+                 Console.WriteLine($"{options.Authority}");
+
+                 return Task.CompletedTask;
+             }
+
+         };
+
+     });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("canRead", policy => policy.RequireClaim("scope", "catalogapi.read"));
+});
+
 
 builder.Services.AddAutoMapper(typeof(ProductMappingProfile).Assembly);
+
+var userPolicy = new AuthorizationPolicyBuilder()
+     .RequireAuthenticatedUser().Build();
+
+builder.Services.AddControllers(conf =>
+{
+    conf.Filters.Add(new AuthorizeFilter(userPolicy));
+});
+
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     Assembly.GetExecutingAssembly(),
@@ -57,10 +114,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

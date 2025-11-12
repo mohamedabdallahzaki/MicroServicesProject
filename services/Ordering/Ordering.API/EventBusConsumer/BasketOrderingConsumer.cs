@@ -29,7 +29,7 @@ namespace Ordering.API.EventBusConsumer
             using var scope = _logger.BeginScope("consuming basket checkout event for {correlationid}",context.Message.CorrelationId);
             var cmd = _mapper.Map<CheckoutOrderCommand>(context.Message);
             var result = await _mediator.Send(cmd);
-            _logger.LogInformation("Basket checkout event completed !!");
+            _logger.LogInformation("Basket checkout event completed !");
         }
     }
 }
