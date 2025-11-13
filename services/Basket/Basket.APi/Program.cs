@@ -10,6 +10,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Serilog;
@@ -28,7 +29,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
      .AddJwtBearer(options =>
      {
-         options.Authority = "https://host.docker.internal:9009";
+         options.Authority = "https://id-local.eshopping.com:44344";
          options.RequireHttpsMetadata = true;
 
          options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -36,7 +37,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              ValidateAudience = true,
              ValidAudience = "Basket",
              ValidateIssuer = true,
-             ValidIssuer = "https://localhost:9009",
+             ValidIssuer = "https://id-local.eshopping.com:44344",
              ValidateLifetime = true,
              ValidateIssuerSigningKey = true,
              ClockSkew = TimeSpan.Zero
@@ -163,16 +164,31 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+var nginxPath = "/basket";
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseDeveloperExceptionPage();
+    app.MapOpenApi();
+    app.Use((ctx, next) =>
+    {
+        if(ctx.Request.Headers.TryGetValue("X-ForwardedFor-Prefix", out var prefix) && !string.IsNullOrEmpty(prefix))
+        {
+            ctx.Request.PathBase = prefix.ToString();
+        }
+
+        return next();
+    });
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.APi v1");
-        c.SwaggerEndpoint("/swagger/v2/swagger.json", "Basket.APi v2");
+        c.SwaggerEndpoint($"{nginxPath}/swagger/v1/swagger.json", "Basket.APi v1");
+        c.SwaggerEndpoint($"{nginxPath}/swagger/v2/swagger.json", "Basket.APi v2");
     });
 }
 

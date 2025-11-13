@@ -22,7 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
      .AddJwtBearer(options =>
      {
-         options.Authority = "https://host.docker.internal:9009";
+         options.Authority = "https://id-local.eshopping.com:44344";
          options.RequireHttpsMetadata = true;
 
          options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -30,7 +30,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              ValidateAudience =  true,
              ValidAudience = "Catalog",
              ValidateIssuer = true,
-             ValidIssuer = "https://localhost:9009",
+             ValidIssuer = "https://id-local.eshopping.com:44344",
              ValidateLifetime = true,
              ValidateIssuerSigningKey = true,
              ClockSkew = TimeSpan.Zero
@@ -116,6 +116,32 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.MapOpenApi();
+    // BEFORE UseSwagger / routing
+    app.Use((ctx, next) =>
+    {
+        if (ctx.Request.Headers.TryGetValue("X-Forwarded-Prefix", out var p) && !string.IsNullOrEmpty(p))
+            ctx.Request.PathBase = p.ToString();   // e.g., "/catalog"
+        return next();
+    });
+
+    app.UseSwagger(c =>
+    {
+        // Make the OpenAPI "servers" base path match the prefix so Try it out uses /catalog/...
+        c.PreSerializeFilters.Add((doc, req) =>
+        {
+            var prefix = req.Headers["X-Forwarded-Prefix"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(prefix))
+                doc.Servers = new List<Microsoft.OpenApi.Models.OpenApiServer>
+            { new() { Url = prefix } };
+        });
+    });
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("v1/swagger.json", "Catalog.API v1"); // relative path (no leading '/')
+        c.RoutePrefix = "swagger";
+    });
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
